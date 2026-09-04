@@ -1,29 +1,18 @@
 /* ============================================================
    views/home.js — HOME SECTION
-   Hero, intro, stats strip, quick-access index, progress bars
-   and achievements list. All labels come from i18n.js.
+   Hero with 3D Earth (globe.js), stats, personalized level card
+   + adaptive recommendation strips, quick access, progress,
+   achievements. Labels from i18n.js, brain from state.js.
 ============================================================ */
-function heroGlobeSVG(){
-  return `<svg viewBox="0 0 340 340" fill="none" aria-hidden="true">
-    <ellipse cx="170" cy="170" rx="152" ry="54" transform="rotate(-18 170 170)" stroke="#c25a2e" stroke-width="2" stroke-linecap="round" stroke-dasharray="1.5 8"/>
-    <circle cx="317" cy="122" r="5.5" fill="#c25a2e" stroke="#faf8f3" stroke-width="2.5"/>
-    <circle cx="170" cy="170" r="112" fill="#ffffff" stroke="#1d1b16" stroke-width="2.5"/>
-    <g transform="rotate(-10 170 170)" stroke="#d9d3c4" stroke-width="1.4" fill="none">
-      <ellipse cx="170" cy="170" rx="76" ry="112"/>
-      <ellipse cx="170" cy="170" rx="38" ry="112"/>
-      <path d="M70.8 118 Q170 136 269.2 118"/>
-      <path d="M58 170 Q170 190 282 170"/>
-      <path d="M70.8 222 Q170 234 269.2 222"/>
-    </g>
-    <circle cx="212" cy="118" r="5" fill="#0e7a5f" stroke="#faf8f3" stroke-width="2.5"/>
-    <circle cx="128" cy="214" r="5" fill="#c25a2e" stroke="#faf8f3" stroke-width="2.5"/>
-    <circle cx="238" cy="206" r="3.5" fill="#1d1b16" stroke="#faf8f3" stroke-width="2.5"/>
-  </svg>`;
-}
-
 function renderHome(){
   const acc = S.answered ? Math.round(S.correct/S.answered*100) : 0;
   const learned = S.learned.length;
+  const li = lvlIndex();
+  const cur = LEVELS[li], nxt = LEVELS[li+1];
+  const prog = nxt ? Math.round((S.xp-cur.xp)/(nxt.xp-cur.xp)*100) : 100;
+  const rec = recommendInfo();
+  const weak = weakestCat();
+  const weakCatObj = weak ? QUIZ_CATS.find(c=>c.id===weak) : null;
   el("app").innerHTML = `
   <div class="page">
     <section class="hero">
@@ -36,7 +25,10 @@ function renderHome(){
           <button class="btn btn-ghost" onclick="go('countries')">${t("hero_cta2")}</button>
         </div>
       </div>
-      <div class="hero-art">${heroGlobeSVG()}</div>
+      <div class="hero-art">
+        <div class="globe-wrap" id="globe-mount"></div>
+        <p class="globe-hint">${ic("globe",14)} ${t("globe_hint")}</p>
+      </div>
     </section>
 
     <div class="stats">
@@ -45,6 +37,18 @@ function renderHome(){
       <div class="stat"><b>${S.quizzes}</b><span>${t("stat_quizzes")}</span></div>
       <div class="stat"><b>${acc}%</b><span>${t("stat_acc")}</span></div>
     </div>
+
+    <div class="rec-strip">
+      <span class="ric">${ic("target",20)}</span>
+      <span class="rtxt"><b>${t("lv_"+rec.lv)} · ${t("recommended")}</b>${tf(rec.k,{p:rec.p,a:rec.a})}</span>
+      <button class="btn btn-primary" onclick="qLevel='${rec.lv}';go('quiz')">${tf("train_btn",{lvl:t("lv_"+rec.lv)})}</button>
+    </div>
+    ${weakCatObj?`
+    <div class="rec-strip">
+      <span class="ric">${ic("mountain",20)}</span>
+      <span class="rtxt"><b>${t("weak_h")}</b>${tf("weak_d",{cat:t(weakCatObj.nkey),p:Math.round(S.catStats[weak].c/S.catStats[weak].a*100)})}</span>
+      <button class="btn btn-ghost" onclick="startQuiz('${weak}','${rec.lv}')">${t("try_again")}</button>
+    </div>`:""}
 
     <h2 class="sec-title" style="font-size:26px">${t("explore_h")}</h2>
     <div class="index-list">
@@ -66,9 +70,16 @@ function renderHome(){
 
     <div class="home-cols">
       <div>
+        <div class="lvl-card">
+          <div class="lt">
+            <span class="lname">${tf("lvl_title",{n:li+1,name:t(cur.key)})}</span>
+            <span class="lxp">${nxt?`${S.xp} / ${nxt.xp} XP`:tf("xp_max",{n:S.xp})}</span>
+          </div>
+          <div class="pbar" style="margin-top:12px"><i style="width:${prog}%"></i></div>
+        </div>
         <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-          <h2 class="sec-title" style="font-size:24px;padding-top:20px">${t("progress_h")}</h2>
-          <button class="chip" id="reset-btn" onclick="resetProgress(this)" style="margin-top:20px">${t("reset")}</button>
+          <h2 class="sec-title" style="font-size:24px">${t("progress_h")}</h2>
+          <button class="chip" id="reset-btn" onclick="resetProgress(this)">${t("reset")}</button>
         </div>
         <div style="margin-top:22px">
           <div class="prog-row"><div class="plabel">${t("p_learned")} <span>${learned} / ${COUNTRIES.length}</span></div><div class="pbar"><i style="width:${learned/COUNTRIES.length*100}%"></i></div></div>
@@ -77,7 +88,7 @@ function renderHome(){
         </div>
       </div>
       <div>
-        <h2 class="sec-title" style="font-size:24px;padding-top:20px">${t("ach_h")} <span style="color:var(--muted);font-size:16px;font-family:var(--body)">${S.ach.length} / ${ACH.length}</span></h2>
+        <h2 class="sec-title" style="font-size:24px">${t("ach_h")} <span style="color:var(--muted);font-size:16px;font-family:var(--body)">${S.ach.length} / ${ACH.length}</span></h2>
         <div class="ach-list">
           ${ACH.map(a=>{const u=S.ach.includes(a.id);return `
             <div class="ach ${u?"unlocked":"locked"}">
@@ -88,6 +99,7 @@ function renderHome(){
       </div>
     </div>
   </div>`;
+  initHomeGlobe(el("globe-mount"));
 }
 function resetProgress(btn){
   if(btn.dataset.confirm){ S={...DEF}; save(); renderHome(); toast(t("reset_done"),"refresh"); return; }

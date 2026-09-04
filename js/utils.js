@@ -1,10 +1,8 @@
 /* ============================================================
    utils.js — SHARED HELPERS & ICONS
-   ------------------------------------------------------------
-   Small utilities used by several views: formatting, shuffling,
-   flag images with a fallback, the icon set, toasts, and the
-   shared filter-chip / search / empty-state helpers.
-   You rarely need to edit this file.
+   Small utilities used by several views. You rarely need to
+   edit this file. toast(title, icon, kicker) — kicker is an
+   optional small header line (defaults to "Achievement unlocked").
 ============================================================ */
 const el = id => document.getElementById(id);
 const fmt = n => n.toLocaleString("en-US");
@@ -35,28 +33,28 @@ trophy:'<path d="M8 21h8m-4-4v4M7 4h10v5a5 5 0 0 1-10 0Z"/><path d="M7 5H4a3 3 0
 pin:'<path d="M12 21s-7-5.3-7-11a7 7 0 0 1 14 0c0 5.7-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/>',
 sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/>',
 shuffle:'<path d="M3 7h4l10 10h4"/><path d="m18 14 3 3-3 3"/><path d="M3 17h4l3.5-3.5"/><path d="M13.5 10.5 17 7h4"/><path d="m18 4 3 3-3 3"/>',
-lock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'
+lock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+mountain:'<path d="m8 3 4 8 5-5 5 15H2L8 3z"/>',
+star:'<path d="m12 3 2.7 5.7 6.3.8-4.6 4.3 1.2 6.2-5.6-3.1-5.6 3.1 1.2-6.2L3 9.5l6.3-.8Z"/>',
+target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>'
 };
 function ic(n,s=18){ return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]}</svg>`; }
-/* Directional icon — flips automatically in RTL layout. */
 function dic(n,s=18){ return `<span class="dicon">${ic(n,s)}</span>`; }
 
 /* ---------- Toast notification ---------- */
-function toast(title, icon){
+function toast(title, icon, kicker){
   const tEl = document.createElement("div");
   tEl.className = "toast";
-  tEl.innerHTML = `<span class="ticon">${ic(icon,18)}</span><div><b>${t("ach_unlocked")}</b><span>${title}</span></div>`;
+  tEl.innerHTML = `<span class="ticon">${ic(icon||"trophy",18)}</span><div><b>${kicker||t("ach_unlocked")}</b><span>${title}</span></div>`;
   el("toast-root").appendChild(tEl);
   setTimeout(()=>{ tEl.style.transition="opacity .4s, transform .4s"; tEl.style.opacity="0"; tEl.style.transform="translateY(10px)"; }, 3400);
   setTimeout(()=>tEl.remove(), 3900);
 }
 
 /* ---------- Shared view helpers ---------- */
-/* Continent filter chips — used by Countries, Flags and Learn. */
 function contChips(active, fn){
   return ["All",...CONTQ].map(c=>`<button class="chip ${active===c?"active":""}" onclick="${fn}('${c}')">${c==="All"?t("all"):contName(c)}</button>`).join("");
 }
-/* Search matches English AND localized names/capitals. */
 function matchCountry(c,q){
   if(!q) return true;
   return c.name.toLowerCase().includes(q) || c.cap.toLowerCase().includes(q)

@@ -1,11 +1,7 @@
 /* ============================================================
    i18n.js — UI LABELS (EN/AR) + LANGUAGE SWITCHING
-   ------------------------------------------------------------
-   ▸ To change any visible label, button, heading or message:
-     edit it in the UI dictionary below (en: and ar: blocks).
-   ▸ {n} {a} {b} are placeholders filled at runtime.
-   Also contains the localized data accessors (cName, cCap...)
-   used by every view, and the language toggle logic.
+   ▸ To change any visible label: edit the UI dictionary below.
+   ▸ {n} {a} {b} {p} are placeholders filled at runtime.
 ============================================================ */
 const UI = {
 en:{
@@ -29,6 +25,7 @@ ach_h:"Achievements",ach_unlocked:"Achievement unlocked",
 ach1_n:"First Steps",ach1_d:"Complete your first quiz",ach2_n:"Sharp Mind",ach2_d:"Answer 10 questions correctly",
 ach3_n:"Globe Trotter",ach3_d:"Open 25 country profiles",ach4_n:"Continental Tour",ach4_d:"Explore all 7 continents",
 ach5_n:"Cartographer",ach5_d:"Learn 50 countries in flashcards",ach6_n:"Flag Master",ach6_d:"Score 9+ in a flag quiz",
+ach7_n:"Scholar",ach7_d:"Reach Level 3",
 countries_h:"Countries of the World",
 countries_sub:"All {n} sovereign states — 193 UN members plus Vatican City and Palestine. Click any country for its full details.",
 search_ph:"Search countries or capitals...",all:"All",count_of:"{a} of {b} countries",count_of_flags:"{a} of {b} flags",
@@ -42,8 +39,11 @@ cont_click:"Click a country to open its full profile.",cont_treaty:"None — Ant
 learn_h:"Learning Mode",learn_sub:"Flip through flashcards and mark the countries you've mastered.",
 shuffle:"Shuffle",card_of:"Card {a} of {b}",flip_hint:"Tap the card to flip it",deck_progress:"Deck progress",
 tip_keys:"Tip: use the ← and → arrow keys to move between cards.",
-quiz_h:"Quizzes",quiz_sub:"Nine ways to test your geography — 10 questions each, with instant feedback.",
+globe_hint:"Drag to spin the Earth",globe_in:"Zoom in",globe_out:"Zoom out",
+quiz_h:"Quizzes",quiz_sub:"Nine ways to test your geography — pick a difficulty, or try your personal For You quiz.",
 all_quizzes:"All quizzes",score:"Score",not_taken:"Not taken yet",best:"Best {a}/10",
+lv_easy:"Easy",lv_medium:"Medium",lv_hard:"Hard",recommended:"Recommended",
+foryou_n:"For You",foryou_d:"A personal mix from the countries you've learned, plus your weakest topic.",foryou_locked:"Learn at least 10 countries in Learning Mode to unlock this personal quiz.",pers_badge:"Personalized",
 qc1_n:"Country → Capital",qc1_d:"Given a country, choose its capital city.",
 qc2_n:"Capital → Country",qc2_d:"Given a capital city, find its country.",
 qc3_n:"Flag → Country",qc3_d:"See a flag and name the country it belongs to.",
@@ -56,6 +56,14 @@ qc9_n:"Random Mixed",qc9_d:"A bit of everything — ten random questions.",
 correct_fb:"Correct!",wrong_fb:"Not quite. The correct answer is highlighted.",
 r_perfect:"Perfect score — outstanding!",r_8:"Excellent work!",r_6:"Good job — keep going!",r_4:"Not bad — review and retry.",r_low:"Keep practicing — you'll get there.",
 try_again:"Try again",choose_other:"Choose another quiz",new_best:"New best score!",best_cat:"Best in this category: {a}/10",
+lvl_title:"Level {n} — {name}",lvl_short:"Lv",lvlup_toast:"Level up!",xp_earned:"+{n} XP",xp_max:"Max level — {n} XP total",
+lvl1:"Beginner",lvl2:"Explorer",lvl3:"Navigator",lvl4:"Voyager",lvl5:"Cartographer",lvl6:"Geographer",lvl7:"Globetrotter",
+lvl8:"Trailblazer",lvl9:"Atlas",lvl10:"Earth Sage",lvl11:"Globe Master",lvl12:"Legend",
+rec_up:"You scored {p}% on {a} — time for something tougher.",rec_down:"{a} is dipping ({p}%) — rebuild confidence on Easy first.",
+rec_top:"You've mastered every level — keep defending your Hard streak!",rec_mid:"Solid work on Medium — consistency will unlock Hard.",
+rec_practice:"A little more Easy practice and Medium unlocks.",rec_start:"Start on Easy — we'll recommend the next level as you improve.",
+train_btn:"Take a {lvl} quiz",weak_h:"Train your weak spot",weak_d:"Lowest accuracy: {cat} ({p}%). A quick round will sharpen it.",
+next_lv:"Level up: {lvl}",easier_lv:"Try {lvl} instead",
 k_capital:"Capital",k_population:"Population",k_area:"Area",k_currency:"Currency",k_langs:"Languages",k_official:"Official languages",
 m_neighbors:"Neighboring countries",mark:"Mark as learned",learned:"Learned",close:"Close"
 },
@@ -80,6 +88,7 @@ ach_h:"الإنجازات",ach_unlocked:"إنجاز جديد",
 ach1_n:"الخطوات الأولى",ach1_d:"أكمل أول اختبار",ach2_n:"عقل حاد",ach2_d:"أجب عن 10 أسئلة بشكل صحيح",
 ach3_n:"جامع العالم",ach3_d:"افتح 25 ملف دولة",ach4_n:"جولة قارية",ach4_d:"استكشف القارات السبع",
 ach5_n:"رسّام الخرائط",ach5_d:"تعلّم 50 دولة بالبطاقات",ach6_n:"سيّد الأعلام",ach6_d:"احصل على 9+ في اختبار الأعلام",
+ach7_n:"العالِم",ach7_d:"ابلغ المستوى 3",
 countries_h:"دول العالم",
 countries_sub:"كل {n} دولة ذات سيادة — 193 عضوًا في الأمم المتحدة إضافة إلى الفاتيكان وفلسطين. انقر على أي دولة لعرض تفاصيلها.",
 search_ph:"ابحث عن دولة أو عاصمة...",all:"الكل",count_of:"{a} من {b} دولة",count_of_flags:"{a} من {b} علم",
@@ -93,8 +102,11 @@ cont_click:"انقر على أي دولة لفتح ملفها الكامل.",con
 learn_h:"وضع التعلم",learn_sub:"اقلب البطاقات التعليمية وحدّد الدول التي أتقنتها.",
 shuffle:"خلط",card_of:"البطاقة {a} من {b}",flip_hint:"انقر على البطاقة لقلبها",deck_progress:"تقدم المجموعة",
 tip_keys:"نصيحة: استخدم مفتاحي السهمين ← و → للتنقل بين البطاقات.",
-quiz_h:"الاختبارات",quiz_sub:"تسع طرق لاختبار جغرافيتك — 10 أسئلة لكل اختبار مع تغذية راجعة فورية.",
+globe_hint:"اسحب لتدوير الكرة الأرضية",globe_in:"تكبير",globe_out:"تصغير",
+quiz_h:"الاختبارات",quiz_sub:"تسع طرق لاختبار جغرافيتك — اختر مستوى الصعوبة، أو جرّب اختبارك الشخصي «مخصص لك».",
 all_quizzes:"كل الاختبارات",score:"النتيجة",not_taken:"لم يُؤخذ بعد",best:"أفضل {a}/10",
+lv_easy:"سهل",lv_medium:"متوسط",lv_hard:"صعب",recommended:"موصى به",
+foryou_n:"مخصص لك",foryou_d:"مزيج شخصي من الدول التي تعلمتها، إضافة إلى نقطة ضعفك.",foryou_locked:"تعلّم 10 دول على الأقل في وضع التعلم لفتح هذا الاختبار الشخصي.",pers_badge:"شخصي",
 qc1_n:"دولة ← عاصمة",qc1_d:"تظهر دولة وتختار عاصمتها.",
 qc2_n:"عاصمة ← دولة",qc2_d:"تظهر عاصمة وتجد دولتها.",
 qc3_n:"علم ← دولة",qc3_d:"شاهد علمًا وسمِّ الدولة التي يتبعها.",
@@ -107,6 +119,14 @@ qc9_n:"اختبار عشوائي مختلط",qc9_d:"قسط من كل شيء — 
 correct_fb:"إجابة صحيحة!",wrong_fb:"ليست صحيحة. الإجابة الصحيحة مظلّلة الآن.",
 r_perfect:"نتيجة كاملة — مذهل!",r_8:"عمل رائع!",r_6:"أحسنت — واصل!",r_4:"ليس سيئًا — راجع وحاول مجددًا.",r_low:"واصل التدرب — ستنجح حتمًا.",
 try_again:"حاول مجددًا",choose_other:"اختر اختبارًا آخر",new_best:"أفضل نتيجة جديدة!",best_cat:"أفضل نتيجة في هذه الفئة: {a}/10",
+lvl_title:"المستوى {n} — {name}",lvl_short:"مستوى",lvlup_toast:"ترقية!",xp_earned:"+{n} خبرة",xp_max:"أعلى مستوى — {n} خبرة",
+lvl1:"مبتدئ",lvl2:"مستكشف",lvl3:"ملاح",lvl4:"رحّالة",lvl5:"رسّام خرائط",lvl6:"جغرافي",lvl7:"جوال العالم",
+lvl8:"رائد",lvl9:"أطلس",lvl10:"حكيم الأرض",lvl11:"سيد الكرة الأرضية",lvl12:"أسطورة",
+rec_up:"حصلت على {p}٪ في {a} — حان وقت تحدٍّ أصعب.",rec_down:"نتائج {a} تحتاج تدريبًا ({p}٪) — عزّز ثقتك على السهل أولًا.",
+rec_top:"أتقنت كل المستويات — حافظ على سلسلتك في الصعب!",rec_mid:"أداء جيد على المتوسط — الثبات سيفتح الصعب.",
+rec_practice:"تدريب إضافي على السهل وسيُفتح المتوسط.",rec_start:"ابدأ بالسهل — سنقترح المستوى التالي مع تقدمك.",
+train_btn:"جرّب اختبار {lvl}",weak_h:"درّب نقطة ضعفك",weak_d:"أقل دقة لديك: {cat} ({p}٪). جولة سريعة ستقوّيها.",
+next_lv:"التحدّي التالي: {lvl}",easier_lv:"جرّب {lvl}",
 k_capital:"العاصمة",k_population:"السكان",k_area:"المساحة",k_currency:"العملة",k_langs:"اللغات",k_official:"اللغات الرسمية",
 m_neighbors:"الدول المجاورة",mark:"تحديد كمتعلمة",learned:"متعلمة",close:"إغلاق"
 }};
@@ -134,9 +154,8 @@ function setLang(l){
   document.title=t("doc_title");
   closeModal();
   renderChrome();
-  /* A running quiz is rebuilt in the new language so questions,
-     options and notes are always coherent. */
-  if(quiz && !quiz.done) startQuiz(quiz.cat);
+  /* A running quiz is rebuilt in the new language, keeping its level. */
+  if(quiz && !quiz.done) startQuiz(quiz.cat, quiz.lv);
   else VIEWS[VIEW]();
 }
 function toggleLang(){ setLang(LANG==="ar"?"en":"ar"); }

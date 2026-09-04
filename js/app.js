@@ -16,6 +16,7 @@ function renderChrome(){
 }
 function go(v){
   if(qTimer) clearTimeout(qTimer);
+  if(typeof destroyHomeGlobe==="function") destroyHomeGlobe();  /* stop the 3D loop when leaving Home */
   VIEW = v; renderChrome();
   el("app").innerHTML = "";
   VIEWS[v]();

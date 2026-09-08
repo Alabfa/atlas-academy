@@ -1,15 +1,18 @@
 /* ============================================================
    views/home.js — HOME SECTION
-   Hero with 3D Earth (globe.js), stats, personalized level card
-   + adaptive recommendation strips, quick access, progress,
-   achievements. Labels from i18n.js, brain from state.js.
+   Hero with interactive 3D Earth (globe.js), summary stats,
+   adaptive recommendation strips (recommended level + weak
+   spot) and the quick-access index list.
+   Deliberately NOT here anymore:
+   · "Did you know?" callout   → removed
+   · progress bars             → My Account page
+   · achievements list         → My Account page
+   · level card / XP           → My Account page
+   · Reset progress button     → My Account page (with modal)
 ============================================================ */
 function renderHome(){
   const acc = S.answered ? Math.round(S.correct/S.answered*100) : 0;
   const learned = S.learned.length;
-  const li = lvlIndex();
-  const cur = LEVELS[li], nxt = LEVELS[li+1];
-  const prog = nxt ? Math.round((S.xp-cur.xp)/(nxt.xp-cur.xp)*100) : 100;
   const rec = recommendInfo();
   const weak = weakestCat();
   const weakCatObj = weak ? QUIZ_CATS.find(c=>c.id===weak) : null;
@@ -67,39 +70,6 @@ function renderHome(){
           <span class="index-arrow">${ic("right",19)}</span>
         </button>`;}).join("")}
     </div>
-
-    <div class="home-cols">
-      <div>
-        <div class="lvl-card">
-          <div class="lt">
-            <span class="lname">${tf("lvl_title",{n:li+1,name:t(cur.key)})}</span>
-            <span class="lxp">${nxt?`${S.xp} / ${nxt.xp} XP`:tf("xp_max",{n:S.xp})}</span>
-          </div>
-          <div class="pbar" style="margin-top:12px"><i style="width:${prog}%"></i></div>
-        </div>
-        <h2 class="sec-title" style="font-size:24px;padding-top:20px">${t("progress_h")}</h2>
-        <div style="margin-top:22px">
-          <div class="prog-row"><div class="plabel">${t("p_learned")} <span>${learned} / ${COUNTRIES.length}</span></div><div class="pbar"><i style="width:${learned/COUNTRIES.length*100}%"></i></div></div>
-          <div class="prog-row"><div class="plabel">${t("p_conts")} <span>${S.conts.length} / 7</span></div><div class="pbar"><i style="width:${S.conts.length/7*100}%"></i></div></div>
-          <div class="prog-row"><div class="plabel">${t("p_acc")} <span>${S.answered?acc+"%":"—"} <span style="font-size:12px">(${S.correct}/${S.answered} ${t("p_answers")})</span></span></div><div class="pbar"><i style="width:${acc}%"></i></div></div>
-        </div>
-      </div>
-      <div>
-        <h2 class="sec-title" style="font-size:24px">${t("ach_h")} <span style="color:var(--muted);font-size:16px;font-family:var(--body)">${S.ach.length} / ${ACH.length}</span></h2>
-        <div class="ach-list">
-          ${ACH.map(a=>{const u=S.ach.includes(a.id);return `
-            <div class="ach ${u?"unlocked":"locked"}">
-              <span class="aicon">${ic(u?a.icon:"lock",17)}</span>
-              <div><div class="aname">${t(a.nkey)}</div><div class="adesc">${achD(a.id)}</div></div>
-            </div>`;}).join("")}
-        </div>
-      </div>
-    </div>
   </div>`;
   initHomeGlobe(el("globe-mount"));
-}
-function resetProgress(btn){
-  if(btn.dataset.confirm){ S={...DEF}; save(); renderHome(); toast(t("reset_done"),"refresh"); return; }
-  btn.dataset.confirm="1"; btn.textContent=t("reset_confirm");
-  setTimeout(()=>{ if(el("reset-btn")){ el("reset-btn").dataset.confirm=""; el("reset-btn").textContent=t("reset"); }},3000);
 }

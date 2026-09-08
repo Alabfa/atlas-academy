@@ -81,6 +81,7 @@ xp_note:"XP and level grow by playing — they can't be edited.",
 sync_note:"Progress syncs to your account automatically as you play.",
 danger_h:"Danger zone",danger_d:"Deleting your account permanently removes your profile, XP, level and ranking entry. This cannot be undone.",
 delete_btn:"Delete account",del_title:"Delete your account?",
+signout_d:"Ends your session on this device. Your saved progress stays safe.",
 del_body:"This will permanently delete your account, XP, level and global ranking entry. This action cannot be undone.",
 del_confirm:"Delete permanently",cancel:"Cancel",
 del_error:"Couldn't delete the account — please try again later.",del_done:"Account deleted",
@@ -88,7 +89,18 @@ rank_h:"Global Ranking",rank_sub:"The top Atlas Academy players, ordered by leve
 th_rank:"Rank",th_player:"Player",th_level:"Level",th_xp:"XP",
 you_badge:"You",loading:"Loading…",rank_error:"Couldn't load the ranking — check your connection.",
 retry:"Retry",no_players:"No players yet — be the first on the board!",
-rank_needs_setup:"The ranking appears once Supabase is configured in js/config.js."
+rank_needs_setup:"The ranking appears once Supabase is configured in js/config.js.",
+rank_gate_h:"Join the global ranking",rank_gate_d:"Sign in with Google to save your XP and level online, then compete with learners around the world.",rank_gate_req:"Players join the board from Level {n}",
+rank_locked_d:"You're Level {a} — you'll appear on the board at Level {n}. Only {b} XP to go!",
+rank_cta_train:"Start training",
+rank_locked_empty:"The board is still empty — level up and claim the #1 spot!",
+acct_sub_local:"Your level, progress and achievements — saved on this device.",
+sec_progress:"Progress",sec_data:"Data & privacy",lvl_max_short:"Max level reached",
+acct_guest:"Local Player",acct_guest_sub:"Progress is saved privately in this browser.",
+acct_chip_in:"Signed in with Google",acct_chip_local:"Local progress",
+acct_not_conf:"Online accounts aren't set up yet — add your Supabase URL and anon key in js/config.js to enable sign-in and the global ranking.",
+save_online_h:"Keep your progress safe",save_online_d:"Sign in with Google to back up your XP and level, and appear on the global ranking.",
+xp_next:"to reach Level {n}",ach_count:"{a} of {b} unlocked",settings_h:"Account settings"
 },
 ar:{
 doc_title:"أطلس أكاديمي — تعلم جغرافيا العالم", brand:"أطلس أكاديمي",
@@ -167,6 +179,7 @@ xp_note:"تزداد نقاط الخبرة والمستوى باللعب فقط �
 sync_note:"يُزامَن تقدمك مع حسابك تلقائيًا أثناء اللعب.",
 danger_h:"منطقة الخطر",danger_d:"حذف حسابك يمحو ملفك الشخصي ونقاطك ومستواك ومدخلك في الترتيب نهائيًا، ولا يمكن التراجع عنه.",
 delete_btn:"حذف الحساب",del_title:"حذف حسابك؟",
+signout_d:"ينهي جلستك على هذا الجهاز. يبقى تقدمك المحفوظ آمنًا.",
 del_body:"سيؤدي هذا إلى حذف حسابك ونقاط خبرتك ومستواك ومدخلك في الترتيب العالمي نهائيًا، ولا يمكن التراجع عن هذا الإجراء.",
 del_confirm:"حذف نهائي",cancel:"إلغاء",
 del_error:"تعذر حذف الحساب — يرجى المحاولة لاحقًا.",del_done:"تم حذف الحساب",
@@ -174,7 +187,18 @@ rank_h:"الترتيب العالمي",rank_sub:"أفضل لاعبي أطلس أ
 th_rank:"المرتبة",th_player:"اللاعب",th_level:"المستوى",th_xp:"الخبرة",
 you_badge:"أنت",loading:"جارٍ التحميل…",rank_error:"تعذر تحميل الترتيب — تحقق من اتصالك.",
 retry:"إعادة المحاولة",no_players:"لا يوجد لاعبون بعد — كن أول من يظهر على القائمة!",
-rank_needs_setup:"يظهر الترتيب بعد تهيئة Supabase في ملف js/config.js."
+rank_needs_setup:"يظهر الترتيب بعد تهيئة Supabase في ملف js/config.js.",
+rank_gate_h:"انضم إلى الترتيب العالمي",rank_gate_d:"سجّل الدخول عبر Google لحفظ نقاط خبرتك ومستواك، وتنافس مع متعلمين من كل أنحاء العالم.",rank_gate_req:"تظهر في القائمة اعتبارًا من المستوى {n}",
+rank_locked_d:"أنت في المستوى {a} — ستظهر في القائمة عند المستوى {n}. تبقى {b} نقطة خبرة فقط!",
+rank_cta_train:"ابدأ التدريب",
+rank_locked_empty:"القائمة لا تزال فارغة — ارفع مستواك واحتل المركز الأول!",
+acct_sub_local:"مستواك وتقدمك وإنجازاتك — محفوظة على هذا الجهاز.",
+sec_progress:"التقدم",sec_data:"البيانات والخصوصية",lvl_max_short:"وصلت إلى أعلى مستوى",
+acct_guest:"لاعب محلي",acct_guest_sub:"يُحفظ التقدم بشكل خاص في هذا المتصفح.",
+acct_chip_in:"مسجّل الدخول عبر Google",acct_chip_local:"تقدم محلي",
+acct_not_conf:"الحسابات غير مفعّلة بعد — أضف رابط Supabase والمفتاح العام في js/config.js لتفعيل تسجيل الدخول والترتيب العالمي.",
+save_online_h:"احتفظ بتقدمك بأمان",save_online_d:"سجّل الدخول عبر Google لعمل نسخة احتياطية من نقاطك ومستواك، والظهور في الترتيب العالمي.",
+xp_next:"للوصول إلى المستوى {n}",ach_count:"تم فتح {a} من {b}",settings_h:"إعدادات الحساب"
 }};
 
 /* ---------- Language state + helpers ---------- */

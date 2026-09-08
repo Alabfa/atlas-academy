@@ -38,6 +38,15 @@ const Account = {
     renderChrome();
     await this.ensureProfile();
     renderChrome();
+    /* Return the user to the page that started the sign-in
+       (e.g. the ranking gate); expires after 10 minutes. */
+    try{
+      const ret=(sessionStorage.getItem("atlas-return")||"").split(":");
+      sessionStorage.removeItem("atlas-return");
+      if(ret[0] && VIEWS[ret[0]] && Date.now()-Number(ret[1]||0)<10*60*1000){
+        go(ret[0]); return;
+      }
+    }catch(e){}
     if(VIEW==="account") renderAccount();
   },
 
@@ -87,6 +96,7 @@ const Account = {
 
   signIn(){
     if(!this.configured) return;
+    try{ sessionStorage.setItem("atlas-return", VIEW+":"+Date.now()); }catch(e){}
     return this.client.auth.signInWithOAuth({ provider:"google", options:{ redirectTo: location.origin+location.pathname } });
   },
   async signOut(){

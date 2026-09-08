@@ -17,6 +17,7 @@
     <button class="logo" onclick="go('home')"><span class="logo-mark" id="logo-ic"></span><span id="brand-txt">Atlas Academy</span></button>
     <div class="topbar-right">
       <nav class="nav-links" id="top-nav"></nav>
+      <span id="auth-area" class="auth-area"></span>
       <button class="lang-btn" id="lang-btn" onclick="toggleLang()"></button>
     </div>
   </div>
@@ -30,7 +31,9 @@
 <div id="modal-root"></div>
 <div id="toast-root"></div>
 
-<!-- Script order matters: data → i18n → utils → state → views → app -->
+<!-- Script order matters: supabase+config → data → i18n → utils → state → account → views → app -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
 <script src="js/data-countries.js"></script>
 <script src="js/data-continents.js"></script>
 <script src="js/data-arabic.js"></script>
@@ -38,6 +41,7 @@
 <script src="js/i18n.js"></script>
 <script src="js/utils.js"></script>
 <script src="js/state.js"></script>
+<script src="js/account.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
 <script src="js/views/globe.js"></script>
 <script src="js/views/home.js"></script>
@@ -46,6 +50,8 @@
 <script src="js/views/continents.js"></script>
 <script src="js/views/learn.js"></script>
 <script src="js/views/quiz.js"></script>
+<script src="js/views/account.js"></script>
+<script src="js/views/ranking.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

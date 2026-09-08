@@ -12,7 +12,7 @@ function renderChrome(){
   el("top-nav").innerHTML = NAV.map(([id,key])=>`<button class="nav-link ${VIEW===id?"active":""}" onclick="go('${id}')">${t(key)}</button>`).join("");
   el("mobile-nav").innerHTML = NAV.map(([id,key,icn])=>`<button class="${VIEW===id?"active":""}" onclick="go('${id}')">${ic(icn,20)}<span>${t(key)}</span></button>`).join("");
   el("lang-btn").textContent = t("lang_switch");
-  el("footer-el").innerHTML = `${t("footer_1")}<br>${t("footer_2")}`;
+  el("footer-el").innerHTML = t("footer");
 }
 function go(v){
   if(qTimer) clearTimeout(qTimer);

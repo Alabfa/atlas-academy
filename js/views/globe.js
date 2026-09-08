@@ -86,8 +86,6 @@ function initHomeGlobe(mount){
     b.type="button"; b.setAttribute("aria-label",label); b.innerHTML=svg;
     b.addEventListener("click",fn); zc.appendChild(b);
   };
-  mkBtn(t("globe_in"),  SVG_PLUS, ()=>homeGlobeZoom(1));
-  mkBtn(t("globe_out"), SVG_MINUS,()=>homeGlobeZoom(-1));
   mount.appendChild(zc);
 
   /* drag to rotate (mouse + touch) */

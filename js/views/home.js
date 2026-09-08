@@ -77,10 +77,7 @@ function renderHome(){
           </div>
           <div class="pbar" style="margin-top:12px"><i style="width:${prog}%"></i></div>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-          <h2 class="sec-title" style="font-size:24px">${t("progress_h")}</h2>
-          <button class="chip" id="reset-btn" onclick="resetProgress(this)">${t("reset")}</button>
-        </div>
+        <h2 class="sec-title" style="font-size:24px;padding-top:20px">${t("progress_h")}</h2>
         <div style="margin-top:22px">
           <div class="prog-row"><div class="plabel">${t("p_learned")} <span>${learned} / ${COUNTRIES.length}</span></div><div class="pbar"><i style="width:${learned/COUNTRIES.length*100}%"></i></div></div>
           <div class="prog-row"><div class="plabel">${t("p_conts")} <span>${S.conts.length} / 7</span></div><div class="pbar"><i style="width:${S.conts.length/7*100}%"></i></div></div>

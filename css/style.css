@@ -369,3 +369,8 @@ html[lang="ar"] .rank-table thead th{text-transform:none;font-size:12.5px;letter
 .you-badge{font-size:10.5px;font-weight:700;background:var(--accent);color:#fff;padding:2px 9px;border-radius:99px;margin-inline-start:8px;vertical-align:2px}
 .rank-more td{text-align:center;color:var(--muted);background:var(--bg);font-weight:700;letter-spacing:.2em}
 @media(max-width:760px){.mnav button{font-size:9.5px}.mnav button svg{width:18px;height:18px}}
+/* ---------- Reset progress zone (account page) ---------- */
+.reset-zone{border:1px solid var(--line);background:var(--bg);border-radius:var(--r);padding:18px 20px;margin-top:16px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.reset-zone b{display:block}
+.reset-zone p{font-size:13px;color:var(--muted);max-width:46ch;margin-top:3px}
+.modal-warn{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;font-weight:600;color:var(--bad);background:var(--bad-soft);border-radius:10px;padding:11px 14px;margin-top:12px}

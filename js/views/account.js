@@ -52,6 +52,10 @@ function renderAccount(){
       <div style="border-top:1px solid var(--line);margin-top:18px;padding-top:18px">
         <button class="btn btn-ghost" onclick="accountSignOut()">${ic("left",15)} ${t("sign_out")}</button>
       </div>
+      <div class="reset-zone">
+        <div><b>${t("reset_zone_h")}</b><p>${t("reset_zone_d")}</p></div>
+        <button class="btn btn-ghost" onclick="askResetProgress()">${t("reset")}</button>
+      </div>
       <div class="danger-zone">
         <div><b>${t("danger_h")}</b><p>${t("danger_d")}</p></div>
         <button class="btn btn-danger" onclick="askDeleteAccount()">${t("delete_btn")}</button>
@@ -97,4 +101,30 @@ async function doDeleteAccount(){
   const res=await Account.deleteAccount();
   closeModal();
   toast(res.ok ? t("del_done") : t("del_error"), res.ok ? "check" : "x");
+}
+function askResetProgress(){
+  const online = Account.signedIn();
+  el("modal-root").innerHTML=`
+  <div class="overlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal" role="alertdialog" aria-label="${t("reset_title")}">
+      <div class="modal-in">
+        <h3 style="font-size:24px;margin-bottom:8px">${t("reset_title")}</h3>
+        <p style="font-size:14.5px;color:var(--muted)">${t("reset_body")}</p>
+        ${online?`<p class="modal-warn">${ic("x",15)} ${t("reset_online")}</p>`:""}
+        <div class="m-actions">
+          <button class="btn btn-ghost" onclick="closeModal()">${t("cancel")}</button>
+          <button class="btn btn-danger" id="reset-confirm-btn" onclick="doResetProgress()">${t("reset_confirm")}</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+async function doResetProgress(){
+  const b=el("reset-confirm-btn"); if(b){ b.disabled=true; b.style.opacity=".6"; }
+  S={...DEF}; save();                                  /* wipe local progress (same as before) */
+  if(Account.signedIn()) await Account.pushProgress(); /* keep cloud consistent: online XP/level → 0 */
+  closeModal();
+  renderChrome();
+  renderAccount();
+  toast(t("reset_done"),"refresh");
 }

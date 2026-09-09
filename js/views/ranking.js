@@ -13,7 +13,7 @@
    hides below-threshold players from everyone.
    ⚠ Keep RANK_MIN_LEVEL in sync with the SQL policy.
 ============================================================ */
-const RANK_MIN_LEVEL = 5;
+const RANK_MIN_LEVEL = 3;
 
 async function renderRanking(){
   const app=el("app");

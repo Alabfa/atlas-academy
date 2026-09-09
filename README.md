@@ -8,7 +8,7 @@ A free, open-source geography learning app. No framework, no build step, no back
 
 **[🌐 Play now — alabfa.github.io/atlas-academy](https://alabfa.github.io/atlas-academy/)** · [Report a Bug](https://github.com/Alabfa/atlas-academy/issues)
 
-![Vanilla JS](https://img.shields.io/badge/JavaScript-Vanilla-f7df1e?logo=javascript&logoColor=black)
+![Vanilla JS](https://img.shields.io/badge/JavaScript-Vanilla-f7df1e)
 ![No Framework](https://img.shields.io/badge/Framework-None-success)
 ![Languages](https://img.shields.io/badge/Languages-EN%20%7C%20AR-blue)
 ![Hosting](https://img.shields.io/badge/Hosting-GitHub%20Pages-orange)

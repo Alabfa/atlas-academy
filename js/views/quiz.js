@@ -130,7 +130,7 @@ function startQuiz(cat, lv){
   let qs, level=lv||null;
   if(cat==="foryou"){ qs=buildForYou(); level=null; }
   else { level=lv||qLevel||recommendLevel(); qs=buildQuiz(cat,10,level); }
-  quiz={cat, lv:level, qs, idx:0, score:0, xpEarned:0, answered:false, chosen:-1, results:[], done:false, newBest:false};
+  quiz={cat, lv:level, qs, idx:0, score:0, xpEarned:0, answered:false, chosen:-1, results:[], picks:[], done:false, newBest:false};
   VIEW="quiz"; renderChrome();
   renderQuizRun();
   window.scrollTo({top:0});
@@ -230,6 +230,7 @@ function answer(i){
   if(!opt) return;
   quiz.answered = true;
   quiz.chosen = i;
+  quiz.picks.push(i);
   const ok = !!opt.ok;
   if(ok){
     quiz.score++;
@@ -270,36 +271,123 @@ function resultMsg(sc,n){
   const p = sc/n;
   return p===1?t("r_perfect") : p>=.8?t("r_8") : p>=.6?t("r_6") : p>=.4?t("r_4") : t("r_low");
 }
+
+/* ---------- Result screen v2: hero + XP breakdown + review ---------- */
+let revOpen=true;
+function revToggle(){ revOpen=!revOpen; renderQuizResult(); }
+function isoName(iso){ const c=COUNTRIES.find(x=>x.iso===iso); return c?cName(c):iso; }
+
 function renderQuizResult(){
-  const sc = quiz.score, pct = sc/quiz.qs.length, C = 2*Math.PI*52;
-  const cat = QUIZ_CATS.find(c=>c.id===quiz.cat);
-  const li = lvlIndex();
-  /* Next-step suggestion based on performance + current level */
+  const total=quiz.qs.length, sc=quiz.score, pct=sc/total;
+  const C=2*Math.PI*56;
+  const cat=QUIZ_CATS.find(c=>c.id===quiz.cat);
+  const catLabel=quiz.cat==="foryou"?t("foryou_n"):t(cat.nkey);
+  const li=lvlIndex(), cur=LEVELS[li], nxt=LEVELS[li+1];
+  const lprog=nxt?Math.round((S.xp-cur.xp)/(nxt.xp-cur.xp)*100):100;
+
+  /* XP breakdown — exact reverse of what finishQuiz added */
+  const xpPerfect=(quiz.lv&&sc===total)?25:0;
+  const xpFinish=quiz.lv?10:0;
+  const xpCorrect=Math.max(0,quiz.xpEarned-xpPerfect-xpFinish);
+
+  const stars=pct>=1?5:pct>=.8?4:pct>=.6?3:pct>=.4?2:pct>=.2?1:0;
+  const starSvg=on=>`<svg class="${on?"":"off"}" width="20" height="20" viewBox="0 0 24 24" fill="${on?"currentColor":"none"}" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="m12 3 2.7 5.7 6.3.8-4.6 4.3 1.2 6.2-5.6-3.1-5.6 3.1 1.2-6.2L3 9.5l6.3-.8Z"/></svg>`;
+
+  const optInner=o=>o.f!==undefined
+    ?`<img src="${flagUrl(o.f,80)}" alt=""> ${escHtml(isoName(o.f))}`
+    :escHtml(o.t);
+  const correctOf=q=>q.opts.list[q.opts.list.findIndex(o=>o.ok)];
+
+  const review=revOpen?`<div class="qrev-list">${quiz.qs.map((q,i)=>{
+    const ok=quiz.results[i], pick=quiz.picks?quiz.picks[i]:-1;
+    return `
+    <div class="qrev ${ok?"good":"bad"}" id="qrev-${i}">
+      <span class="qrev-ic">${ic(ok?"check":"x",14)}</span>
+      <div class="qrev-body">
+        <div class="qrev-q">${i+1}. ${q.q}</div>
+        ${!ok&&pick>=0?`<div class="qrev-line"><span>${t("res_your")}:</span>${optInner(q.opts.list[pick])}</div>`:""}
+        <div class="qrev-line"><span>${t("res_correct")}:</span>${optInner(correctOf(q))}</div>
+        ${q.note?`<div class="qrev-note">${q.note}</div>`:""}
+      </div>
+    </div>`;}).join("")}</div>`:"";
+
+  const segs=quiz.results.map((ok,i)=>`
+    <button class="qseg ${ok?"ok":"bad"}" title="${tf("res_q_num",{n:i+1})}"
+      onclick="document.getElementById('qrev-${i}').scrollIntoView({behavior:'smooth',block:'center'})">${i+1}</button>`).join("");
+
+  /* next-step suggestions (unchanged logic) */
   let sug="";
   if(quiz.lv){
     const up={easy:"medium",medium:"hard"}[quiz.lv];
-    if(sc>=8 && up) sug=`<button class="btn btn-primary" onclick="startQuiz('${quiz.cat}','${up}')">${tf("next_lv",{lvl:t("lv_"+up)})} ${dic("right",16)}</button>`;
-    else if(sc<5 && quiz.lv==="hard") sug=`<button class="btn btn-ghost" onclick="startQuiz('${quiz.cat}','medium')">${tf("easier_lv",{lvl:t("lv_medium")})}</button>`;
-    else if(sc<5 && quiz.lv==="medium") sug=`<button class="btn btn-ghost" onclick="startQuiz('${quiz.cat}','easy')">${tf("easier_lv",{lvl:t("lv_easy")})}</button>`;
+    if(sc>=8&&up) sug=`<button class="btn btn-primary" onclick="startQuiz('${quiz.cat}','${up}')">${tf("next_lv",{lvl:t("lv_"+up)})} ${dic("right",16)}</button>`;
+    else if(sc<5&&quiz.lv==="hard") sug=`<button class="btn btn-ghost" onclick="startQuiz('${quiz.cat}','medium')">${tf("easier_lv",{lvl:t("lv_medium")})}</button>`;
+    else if(sc<5&&quiz.lv==="medium") sug=`<button class="btn btn-ghost" onclick="startQuiz('${quiz.cat}','easy')">${tf("easier_lv",{lvl:t("lv_easy")})}</button>`;
   }
-  el("app").innerHTML = `
-  <div class="page"><div class="result">
-    <div class="ring-wrap">
-      <svg width="150" height="150" viewBox="0 0 120 120">
-        <circle cx="60" cy="60" r="52" stroke="var(--line)" stroke-width="9" fill="none"/>
-        <circle id="ring-fg" cx="60" cy="60" r="52" stroke="${pct>=.6?"var(--accent)":"var(--terra)"}" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="0 ${C}" style="transition:stroke-dasharray 1s cubic-bezier(.3,.7,.3,1)"/>
-      </svg>
-      <div class="ring-num">${sc}<small> / ${quiz.qs.length}</small></div>
+  const tryAgain=`<button class="btn ${sug?"btn-ghost":"btn-primary"}" onclick="startQuiz('${quiz.cat}','${quiz.lv||""}')">${ic("refresh",16)} ${t("try_again")}</button>`;
+
+  el("app").innerHTML=`
+  <div class="page"><div class="qres">
+    <div class="q-top">
+      <button class="chip" onclick="backToQuizzes()">${dic("left",14)} ${t("all_quizzes")}</button>
+      <span class="q-cat-label">${catLabel}</span>
+      <span></span>
     </div>
-    <h3>${resultMsg(sc,quiz.qs.length)}</h3>
-    <p>${quiz.cat==="foryou"?t("foryou_n"):t(cat.nkey)}</p>
-    <span class="xp-line">${ic("star",14)} ${tf("xp_earned",{n:quiz.xpEarned})} · ${t("lvl_short")} ${li+1} — ${t(LEVELS[li].key)}</span><br>
-    ${quiz.newBest?`<span class="newbest">${ic("trophy",14)} ${t("new_best")}</span>`:`<p style="font-size:13.5px">${tf("best_cat",{a:quiz.lv?(S.bestLv[quiz.cat+"@"+quiz.lv]??S.best[quiz.cat]):S.best[quiz.cat]})}</p>`}
-    <div class="result-actions">
-      <button class="btn ${sug?"btn-ghost":"btn-primary"}" onclick="startQuiz('${quiz.cat}','${quiz.lv||""}')">${ic("refresh",16)} ${t("try_again")}</button>
+
+    <section class="qres-hero">
+      <div class="qres-ring">
+        <svg width="150" height="150" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="56" stroke="var(--line)" stroke-width="9" fill="none"/>
+          <circle id="qring" cx="60" cy="60" r="56" stroke="${pct>=.6?"var(--accent)":"var(--terra)"}" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="0 ${C}" style="transition:stroke-dasharray 1s cubic-bezier(.3,.7,.3,1)"/>
+        </svg>
+        <div class="qres-num"><b id="qnum">0</b><span>/${total}</span></div>
+      </div>
+      <div class="qres-side">
+        <div class="qres-chips">
+          <span class="qres-chip">${catLabel}</span>
+          <span class="qres-chip lv">${quiz.lv?t("lv_"+quiz.lv):t("pers_badge")}</span>
+          ${quiz.newBest?`<span class="newbest2">${ic("trophy",12)} ${t("new_best")}</span>`:""}
+        </div>
+        <h2 class="qres-verdict">${resultMsg(sc,total)}</h2>
+        <span class="qstars" aria-label="${stars}/5">${[1,2,3,4,5].map(i=>starSvg(i<=stars)).join("")}</span>
+        <div class="qres-xp">
+          <span class="xpc">${ic("star",13)} +${xpCorrect} ${t("res_xp_correct")}</span>
+          ${xpFinish?`<span class="xpc">+${xpFinish} ${t("res_xp_bonus")}</span>`:""}
+          ${xpPerfect?`<span class="xpc">${ic("trophy",13)} +${xpPerfect} ${t("res_xp_perfect")}</span>`:""}
+        </div>
+        ${quiz.newBest?"":`<p class="qres-best">${tf("best_cat",{a:quiz.lv?(S.bestLv[quiz.cat+"@"+quiz.lv]??S.best[quiz.cat]):S.best[quiz.cat]})}</p>`}
+      </div>
+    </section>
+
+    <section class="qres-card qres-lvl">
+      <div class="qres-lvl-row">
+        <span class="qlv">${t("lvl_short")} ${li+1} · ${t(cur.key)}</span>
+        <span class="qxpv">${nxt?`${fmt(S.xp)} / ${fmt(nxt.xp)} XP`:tf("xp_max",{n:fmt(S.xp)})}</span>
+      </div>
+      <div class="pbar"><i style="width:${lprog}%"></i></div>
+    </section>
+
+    <section class="qres-card">
+      <div class="qres-sechead">
+        <b>${t("res_details")}</b>
+        <button class="qrev-toggle" onclick="revToggle()">${revOpen?t("res_hide"):t("res_show")}</button>
+      </div>
+      <div class="qsegs">${segs}</div>
+      ${review}
+    </section>
+
+    <div class="qres-actions">
       ${sug}
+      ${tryAgain}
       <button class="btn btn-ghost" onclick="backToQuizzes()">${t("choose_other")}</button>
     </div>
   </div></div>`;
-  requestAnimationFrame(()=>setTimeout(()=>{ const r=el("ring-fg"); if(r) r.setAttribute("stroke-dasharray",`${C*pct} ${C}`); },80));
+
+  /* ring fill + score count-up */
+  requestAnimationFrame(()=>setTimeout(()=>{
+    const r=el("qring"); if(r) r.setAttribute("stroke-dasharray",`${C*pct} ${C}`);
+    const num=el("qnum");
+    if(num){ const t0=performance.now();
+      const step=n=>{const k=Math.min(1,(n-t0)/900);num.textContent=Math.round(sc*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(step);};
+      requestAnimationFrame(step);}
+  },100));
 }

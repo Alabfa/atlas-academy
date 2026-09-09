@@ -422,3 +422,48 @@ html[lang="ar"] .pacc .field label{text-transform:none;font-size:13px;letter-spa
 .rank-status.locked svg{color:var(--terra)}
 .rank-status .pbtn{margin-inline-start:auto}
 @media(max-width:480px){.rank-status .pbtn{width:100%;margin-inline-start:0}}
+
+/* ---------- Quiz result v2 ---------- */
+.qres{max-width:680px;margin:0 auto}
+.qres-hero{display:grid;grid-template-columns:auto 1fr;gap:28px;background:#fff;border:1.5px solid var(--line2);border-radius:18px;padding:28px;margin-top:16px;align-items:center}
+@media(max-width:560px){.qres-hero{grid-template-columns:1fr;justify-items:center;text-align:center}}
+.qres-ring{position:relative;width:150px;height:150px;flex-shrink:0}
+.qres-ring svg{transform:rotate(-90deg)}
+.qres-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--display)}
+.qres-num b{font-size:34px;font-weight:600;line-height:1}
+.qres-num span{font-size:15px;color:var(--muted);font-weight:500;margin-inline-start:4px}
+.qres-side{min-width:0}
+.qres-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.qres-chip{font-size:12px;font-weight:700;background:var(--bg);border:1px solid var(--line);color:var(--muted);padding:4px 12px;border-radius:99px}
+.qres-chip.lv{color:var(--accent-dark);background:var(--accent-soft);border-color:transparent}
+.newbest2{display:inline-flex;align-items:center;gap:5px;background:var(--accent);color:#fff;font-size:11.5px;font-weight:700;padding:4px 12px;border-radius:99px}
+.qres-verdict{font-size:clamp(20px,3.4vw,26px);line-height:1.25;margin-bottom:8px}
+.qstars{display:inline-flex;gap:3px;color:var(--terra);margin-bottom:14px}
+.qstars svg.off{color:var(--line)}
+.qres-xp{display:flex;gap:8px;flex-wrap:wrap}
+.xpc{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--accent-dark);background:var(--accent-soft);padding:4px 11px;border-radius:99px}
+.qres-best{font-size:13px;color:var(--muted);margin-top:12px}
+.qres-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin-top:14px}
+.qres-lvl .qres-lvl-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:9px}
+.qlv{font-size:13.5px;font-weight:700;color:var(--accent-dark)}
+.qxpv{font-size:12.5px;font-weight:700;color:var(--muted)}
+.qres-sechead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.qres-sechead b{font-family:var(--display);font-size:17px;font-weight:600}
+.qrev-toggle{background:none;border:none;color:var(--accent-dark);font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;padding:6px 12px;border-radius:99px}
+.qrev-toggle:hover{background:var(--accent-soft)}
+.qsegs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+.qseg{width:32px;height:32px;border-radius:9px;border:none;font:inherit;font-size:13px;font-weight:700;cursor:pointer;color:#fff}
+.qseg.ok{background:var(--ok)} .qseg.bad{background:var(--bad)}
+.qseg:hover{filter:brightness(1.1)}
+.qrev-list{display:flex;flex-direction:column;gap:12px}
+.qrev{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-inline-start:3px solid var(--line);border-radius:12px;padding:13px 15px;background:var(--bg)}
+.qrev.good{background:var(--ok-soft);border-color:#d5e8dd;border-inline-start-color:var(--ok)}
+.qrev.bad{background:var(--bad-soft);border-color:#f0d7d1;border-inline-start-color:var(--bad)}
+.qrev-ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;background:#fff;color:var(--ok);border:1px solid var(--line)}
+.qrev.bad .qrev-ic{color:var(--bad)}
+.qrev-q{font-weight:600;font-size:14.5px;line-height:1.4;margin-bottom:6px}
+.qrev-line{font-size:13px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.qrev-line>span:first-child{color:var(--muted);font-weight:600}
+.qrev-line img{height:20px;width:30px;object-fit:contain;border:1px solid var(--line);border-radius:3px;background:#fff}
+.qrev-note{font-size:12.5px;color:var(--muted);margin-top:7px;line-height:1.5}
+.qres-actions{display:flex;gap:12px;justify-content:center;margin-top:22px;flex-wrap:wrap}
